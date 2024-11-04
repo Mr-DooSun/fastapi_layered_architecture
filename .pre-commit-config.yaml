@@ -1,0 +1,44 @@
+repos:
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.1.0
+    hooks:
+      - id: flake8
+        exclude: ./migrations
+        args: ["--ignore=F841,E501,W503,E203"]
+        language_version: python3
+
+  - repo: https://github.com/myint/autoflake
+    rev: v2.3.1
+    hooks:
+      - id: autoflake
+        exclude: ./migrations
+        args:
+          - --in-place
+          - --remove-unused-variables
+          - --remove-all-unused-imports
+          - --expand-star-imports
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ./migrations
+      - id: end-of-file-fixer
+        exclude: ./migrations
+      - id: fix-encoding-pragma
+        exclude: ./migrations
+
+  - repo: https://github.com/psf/black
+    rev: 23.7.0
+    hooks:
+      - id: black
+        exclude: ./migrations
+        language_version: python3
+
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.10.0
+    hooks:
+      - id: isort
+        exclude: ./migrations
+        language_version: python3
+        args: ["--profile", "black", "--filter-files"]
