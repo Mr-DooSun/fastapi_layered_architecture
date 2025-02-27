@@ -10,7 +10,6 @@ from src.server.infrastructure.repositories.user_repository import UserRepositor
 class UserService(BaseService):
     def __init__(self, user_repository: UserRepository) -> None:
         super().__init__(base_repository=user_repository)
-        self.users_repository = user_repository
 
     @property
     def create_dto(self):
