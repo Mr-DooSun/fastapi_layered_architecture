@@ -2,6 +2,8 @@
 from contextlib import asynccontextmanager
 from urllib.parse import quote_plus
 
+from fastapi import HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
@@ -50,8 +52,11 @@ class Database:
         async with self.async_session_factory() as session:
             try:
                 yield session
-            except Exception as e:
+            except IntegrityError:
                 await session.rollback()
-                raise e
+                raise HTTPException(status_code=400, detail="Data integrity error")
+            except Exception:
+                await session.rollback()
+                raise HTTPException(status_code=500, detail="Internal server error")
             finally:
-                await session.close()
+                await session.remove()
