@@ -89,7 +89,7 @@ class BaseRepository(ABC, Generic[CreateEntity, ReturnEntity, UpdateEntity]):
 
         if not data:
             raise BaseCustomException(
-                status_code=404, detail=f"Data with ID {data_id} not found"
+                status_code=404, message=f"Data with ID [ {data_id} ] not found"
             )
 
         return self.return_entity.model_validate(vars(data))
