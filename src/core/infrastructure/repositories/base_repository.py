@@ -2,10 +2,10 @@
 from abc import ABC, abstractmethod
 from typing import Generic, List, Type, TypeVar
 
-from fastapi import HTTPException
 from sqlalchemy import func, insert, select
 
 from src.core.domain.entities.entity import Entity
+from src.core.exceptions.base_exception import BaseCustomException
 from src.core.infrastructure.database.database import Base, Database
 
 CreateEntity = TypeVar("CreateEntity", bound=Entity)
@@ -88,7 +88,7 @@ class BaseRepository(ABC, Generic[CreateEntity, ReturnEntity, UpdateEntity]):
             data = result.scalar_one_or_none()
 
         if not data:
-            raise HTTPException(
+            raise BaseCustomException(
                 status_code=404, detail=f"Data with ID {data_id} not found"
             )
 

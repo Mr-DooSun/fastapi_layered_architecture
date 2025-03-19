@@ -21,9 +21,10 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
             )
             return JSONResponse(status_code=exc.status_code, content=content)
         except Exception as exc:
-            # DEBUG
+            # ============ [ DEBUG ] ============
             error_trace = traceback.format_exc()
             print(error_trace)
+            # ===================================
             content = jsonable_encoder(
                 BaseResponse(
                     success=False,
