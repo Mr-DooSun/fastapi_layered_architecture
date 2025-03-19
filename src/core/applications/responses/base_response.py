@@ -16,9 +16,21 @@ dto_model_config = ConfigDict(
 )
 
 
+class PaginationInfo(BaseModel):
+    current_page: int
+    page_size: int
+    total_items: int
+    total_pages: int
+    has_previous: bool
+    has_next: bool
+    next_page: Optional[int] = None
+    previous_page: Optional[int] = None
+
+
 class BaseResponse(ABC, BaseModel):
     success: bool = True
     message: str = "Request processed successfully"
     data: Optional[Any] = None
+    pagination: Optional[PaginationInfo] = None
 
     model_config = dto_model_config
