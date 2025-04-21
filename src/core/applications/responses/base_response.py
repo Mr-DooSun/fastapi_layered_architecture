@@ -26,6 +26,8 @@ class PaginationInfo(BaseModel):
     next_page: Optional[int] = None
     previous_page: Optional[int] = None
 
+    model_config = dto_model_config
+
 
 class BaseResponse(ABC, BaseModel):
     success: bool = True
