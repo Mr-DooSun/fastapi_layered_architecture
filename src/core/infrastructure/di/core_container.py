@@ -2,7 +2,7 @@
 from dependency_injector import containers, providers
 from minio import Minio
 
-from src.core.applications.messaging.rabbitmq_publisher import RabbitMQPublisher
+from src.core.application.messaging.rabbitmq_publisher import RabbitMQPublisher
 from src.core.domain.services.base_service import BaseService
 from src.core.infrastructure.database.database import Database
 from src.core.infrastructure.messaging.rabbitmq_manager import RabbitMQManager
@@ -11,6 +11,7 @@ from src.core.infrastructure.repositories.base_repository import BaseRepository
 
 class CoreContainer(containers.DeclarativeContainer):
     config = providers.Configuration(strict=True)
+    config.from_yaml("./config.yml")
 
     database = providers.Singleton(
         Database,
