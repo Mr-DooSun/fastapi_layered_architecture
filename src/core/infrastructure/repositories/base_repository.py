@@ -131,7 +131,7 @@ class BaseRepository(ABC, Generic[CreateEntity, ReturnEntity, UpdateEntity]):
             await session.refresh(data)
             return self.return_entity.model_validate(vars(data))
 
-    async def delete_data_by_data_id(self, data_id: int) -> None:
+    async def delete_data_by_data_id(self, data_id: int) -> bool:
         async with self.database.session() as session:
             result = await session.execute(
                 select(self.model).filter(self.model.id == data_id)
@@ -141,3 +141,5 @@ class BaseRepository(ABC, Generic[CreateEntity, ReturnEntity, UpdateEntity]):
             if data:
                 await session.delete(data)
                 await session.commit()
+                return True
+            return False

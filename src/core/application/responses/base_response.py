@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from typing import Any, Optional
+from typing import Generic, Optional, TypeVar
+
+from pydantic import BaseModel
 
 from src.core.application.dtos.base_config import BaseConfig
 
@@ -15,9 +17,12 @@ class PaginationInfo(BaseConfig):
     previous_page: Optional[int] = None
 
 
-class BaseResponse(BaseConfig):
+ReturnType = TypeVar("ReturnType", bound=BaseModel)
+
+
+class BaseResponse(BaseConfig, Generic[ReturnType]):
     success: bool = True
     message: str = "Request processed successfully"
-    data: Optional[Any] = None
+    data: Optional[ReturnType] = None
     pagination: Optional[PaginationInfo] = None
     exists: Optional[bool] = None

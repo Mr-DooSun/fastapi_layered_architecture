@@ -71,5 +71,5 @@ class BaseUseCase(ABC):
             data_id=data_id, update_data=update_data
         )
 
-    async def delete_data_by_data_id(self, data_id: int):
-        await self.base_service.delete_data_by_data_id(data_id=data_id)
+    async def delete_data_by_data_id(self, data_id: int) -> bool:
+        return await self.base_service.delete_data_by_data_id(data_id=data_id)

@@ -62,5 +62,5 @@ class BaseService(ABC):
         )
         return self.response_dto.model_validate(vars(data))
 
-    async def delete_data_by_data_id(self, data_id: int):
-        await self.base_repository.delete_data_by_data_id(data_id=data_id)
+    async def delete_data_by_data_id(self, data_id: int) -> bool:
+        return await self.base_repository.delete_data_by_data_id(data_id=data_id)
