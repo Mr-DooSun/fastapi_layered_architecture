@@ -30,7 +30,6 @@ def create_app():
         allow_headers=["*"],
     )
 
-
     app.include_router(router=health_check_controller.router)
     app.include_router(router=user_controller.router)
 

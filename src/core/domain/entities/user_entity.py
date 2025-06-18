@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-from src.core.domain.entities.entity import Entity
 from datetime import datetime
+
+from src.core.domain.entities.entity import Entity
+
 
 class CoreUserEntity(Entity):
     id: int

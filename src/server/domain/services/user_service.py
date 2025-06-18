@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
-from src.core.application.dtos.user_dto import CoreCreateUserDto, CoreUpdateUserDto, CoreUserDto
+from src.core.application.dtos.user_dto import (
+    CoreCreateUserDto,
+    CoreUpdateUserDto,
+    CoreUserDto,
+)
 from src.core.domain.services.base_service import BaseService
 from src.server.infrastructure.repositories.user_repository import UserRepository
 
