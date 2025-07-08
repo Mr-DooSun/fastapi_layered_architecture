@@ -3,7 +3,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.core.middleware.exception_middleware import ExceptionMiddleware
-from src.server.application.controllers import health_check_controller, user_controller
+from src.server.infrastructure.bootstrap.admin_registry import setup_admin_views
+from src.server.infrastructure.bootstrap.route_registry import register_routes
 from src.server.infrastructure.di.server_container import ServerContainer
 
 container = None
@@ -29,9 +30,8 @@ def create_app():
         allow_methods=["*"],
         allow_headers=["*"],
     )
-
-    app.include_router(router=health_check_controller.router)
-    app.include_router(router=user_controller.router)
+    register_routes(app)
+    setup_admin_views(app, container.core_container.database())
 
     return app
 
