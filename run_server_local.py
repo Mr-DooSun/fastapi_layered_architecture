@@ -4,9 +4,18 @@ import argparse
 import uvicorn
 from dotenv import load_dotenv
 
+# import subprocess
+
 
 def main():
     uvicorn.run("src.server.app:app", reload=True, host="127.0.0.1", port=8000)
+    # subprocess.run([
+    #     "gunicorn",
+    #     "src.server.app:app",
+    #     "-k", "uvicorn.workers.UvicornWorker",
+    #     "-w", "1",
+    #     "-b", "0.0.0.0:8000"
+    # ])
 
 
 if __name__ == "__main__":
