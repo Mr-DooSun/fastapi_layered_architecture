@@ -7,12 +7,12 @@ from src.core.application.dtos.user_dto import (
     CoreUserDto,
 )
 from src.core.domain.services.base_service import BaseService
-from src.server.infrastructure.repositories.user_repository import UserRepository
+from src.server.infrastructure.repositories.user.users_repository import UsersRepository
 
 
-class UserService(BaseService):
-    def __init__(self, user_repository: UserRepository) -> None:
-        super().__init__(base_repository=user_repository)
+class UsersService(BaseService):
+    def __init__(self, users_repository: UsersRepository) -> None:
+        super().__init__(base_repository=users_repository)
 
     @property
     def create_dto(self):

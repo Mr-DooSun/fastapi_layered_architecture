@@ -4,7 +4,7 @@ from datetime import datetime
 from src.core.domain.entities.entity import Entity
 
 
-class CoreUserEntity(Entity):
+class CoreUsersEntity(Entity):
     id: int
     username: str
     full_name: str
@@ -14,14 +14,14 @@ class CoreUserEntity(Entity):
     updated_at: datetime
 
 
-class CoreCreateUserEntity(Entity):
+class CoreCreateUsersEntity(Entity):
     username: str
     full_name: str
     email: str
     password: str
 
 
-class CoreUpdateUserEntity(Entity):
+class CoreUpdateUsersEntity(Entity):
     username: str
     full_name: str
     email: str
