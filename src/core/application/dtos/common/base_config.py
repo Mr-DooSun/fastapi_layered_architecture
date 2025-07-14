@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from abc import ABC
-
 from pydantic import BaseModel, ConfigDict
 from pydantic.alias_generators import to_camel
 
@@ -20,7 +18,7 @@ INTERNAL_CONFIG = ConfigDict(
 )
 
 
-class BaseConfig(BaseModel, ABC):
+class BaseConfig(BaseModel):
     pass
 
 
