@@ -4,8 +4,8 @@ from typing import List, Tuple, Type, TypeVar
 
 from pydantic import BaseModel
 
-from src.core.application.dtos.base_dto import IdListDto
-from src.core.application.responses.base_response import BaseResponse, PaginationInfo
+from src.core.application.dtos.common.base_request import IdListDto
+from src.core.application.dtos.common.base_response import BaseResponse, PaginationInfo
 from src.core.common.pagination import make_pagination
 from src.core.domain.services.base_service import BaseService
 

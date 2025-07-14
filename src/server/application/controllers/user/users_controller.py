@@ -6,13 +6,13 @@ from typing import List
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
 
-from src.core.application.dtos.base_dto import IdListDto
+from src.core.application.dtos.common.base_request import IdListDto
+from src.core.application.dtos.common.base_response import SuccessResponse
 from src.core.application.dtos.user.users_dto import (
     CoreCreateUsersDto,
     CoreUpdateUsersDto,
     CoreUsersDto,
 )
-from src.core.application.responses.base_response import BaseResponse
 from src.server.application.use_cases.user.users_use_case import UsersUseCase
 from src.server.infrastructure.di.server_container import ServerContainer
 
@@ -23,7 +23,7 @@ router = APIRouter()
     "/user",
     summary="유저 생성",
     tags=["유저"],
-    response_model=BaseResponse[CoreUsersDto],
+    response_model=SuccessResponse[CoreUsersDto],
     response_model_exclude={"pagination", "exists"},
 )
 @inject
@@ -32,9 +32,9 @@ async def create_user(
     user_use_case: UsersUseCase = Depends(
         Provide[ServerContainer.user_container.users_use_case]
     ),
-) -> BaseResponse[CoreUsersDto]:
+) -> SuccessResponse[CoreUsersDto]:
     data = await user_use_case.create_data(create_data=create_data)
-    return BaseResponse(data=data)
+    return SuccessResponse(data=data)
 
 
 # ==========================================================================================
@@ -44,7 +44,7 @@ async def create_user(
     "/users",
     summary="유저 생성 (복수)",
     tags=["유저"],
-    response_model=BaseResponse[List[CoreUsersDto]],
+    response_model=SuccessResponse[List[CoreUsersDto]],
     response_model_exclude={"pagination", "exists"},
 )
 @inject
@@ -53,9 +53,9 @@ async def create_users(
     user_use_case: UsersUseCase = Depends(
         Provide[ServerContainer.user_container.users_use_case]
     ),
-) -> BaseResponse[List[CoreUsersDto]]:
+) -> SuccessResponse[List[CoreUsersDto]]:
     data = await user_use_case.create_datas(create_datas=create_datas)
-    return BaseResponse(data=data)
+    return SuccessResponse(data=data)
 
 
 # ==========================================================================================
@@ -65,7 +65,7 @@ async def create_users(
     "/users",
     summary="유저 정보 모두 조회",
     tags=["유저"],
-    response_model=BaseResponse[List[CoreUsersDto]],
+    response_model=SuccessResponse[List[CoreUsersDto]],
     response_model_exclude={"exists"},
 )
 @inject
@@ -75,9 +75,9 @@ async def get_users(
     user_use_case: UsersUseCase = Depends(
         Provide[ServerContainer.user_container.users_use_case]
     ),
-) -> BaseResponse[List[CoreUsersDto]]:
+) -> SuccessResponse[List[CoreUsersDto]]:
     data, pagination = await user_use_case.get_datas(page=page, page_size=page_size)
-    return BaseResponse(data=data, pagination=pagination)
+    return SuccessResponse(data=data, pagination=pagination)
 
 
 # ==========================================================================================
@@ -87,7 +87,7 @@ async def get_users(
     "/user/{user_id}",
     summary="유저 정보 조회",
     tags=["유저"],
-    response_model=BaseResponse[CoreUsersDto],
+    response_model=SuccessResponse[CoreUsersDto],
     response_model_exclude_none=True,
     response_model_exclude={"pagination", "exists"},
 )
@@ -97,9 +97,9 @@ async def get_user_by_user_id(
     user_use_case: UsersUseCase = Depends(
         Provide[ServerContainer.user_container.users_use_case]
     ),
-) -> BaseResponse[CoreUsersDto]:
+) -> SuccessResponse[CoreUsersDto]:
     data = await user_use_case.get_data_by_data_id(data_id=user_id)
-    return BaseResponse(data=data)
+    return SuccessResponse(data=data)
 
 
 # ==========================================================================================
@@ -109,7 +109,7 @@ async def get_user_by_user_id(
     "/users/by-ids",
     summary="ID 리스트로 유저 여러 명 조회",
     tags=["유저"],
-    response_model=BaseResponse[List[CoreUsersDto]],
+    response_model=SuccessResponse[List[CoreUsersDto]],
     response_model_exclude={"pagination", "exists"},
 )
 @inject
@@ -118,9 +118,9 @@ async def get_users_by_ids(
     user_use_case: UsersUseCase = Depends(
         Provide[ServerContainer.user_container.users_use_case]
     ),
-) -> BaseResponse[List[CoreUsersDto]]:
+) -> SuccessResponse[List[CoreUsersDto]]:
     data = await user_use_case.get_datas_by_data_ids(payload=payload)
-    return BaseResponse(data=data)
+    return SuccessResponse(data=data)
 
 
 # ==========================================================================================
@@ -130,7 +130,7 @@ async def get_users_by_ids(
     "/user/{user_id}",
     summary="유저 수정",
     tags=["유저"],
-    response_model=BaseResponse[CoreUsersDto],
+    response_model=SuccessResponse[CoreUsersDto],
     response_model_exclude={"pagination", "exists"},
 )
 @inject
@@ -140,11 +140,11 @@ async def update_user_by_user_id(
     user_use_case: UsersUseCase = Depends(
         Provide[ServerContainer.user_container.users_use_case]
     ),
-) -> BaseResponse[CoreUsersDto]:
+) -> SuccessResponse[CoreUsersDto]:
     data = await user_use_case.update_data_by_data_id(
         data_id=user_id, update_data=update_data
     )
-    return BaseResponse(data=data)
+    return SuccessResponse(data=data)
 
 
 # ==========================================================================================
@@ -154,7 +154,7 @@ async def update_user_by_user_id(
     "/user/{user_id}",
     summary="유저 삭제",
     tags=["유저"],
-    response_model=BaseResponse,
+    response_model=SuccessResponse,
     response_model_exclude={"data", "pagination", "exists"},
 )
 @inject
@@ -163,6 +163,6 @@ async def delete_user_by_user_id(
     users_use_case: UsersUseCase = Depends(
         Provide[ServerContainer.user_container.users_use_case]
     ),
-) -> BaseResponse:
+) -> SuccessResponse:
     success = await users_use_case.delete_data_by_data_id(data_id=user_id)
-    return BaseResponse(success=success)
+    return SuccessResponse(success=success)

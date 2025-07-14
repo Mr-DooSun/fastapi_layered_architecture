@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from typing import Generic, Optional, TypeVar
 
-from src.core.application.dtos.base_config import BaseConfig
+from src.core.application.dtos.common.base_config import ApiConfig
 
 
-class PaginationInfo(BaseConfig):
+class PaginationInfo(ApiConfig):
     current_page: int
     page_size: int
     total_items: int
@@ -15,12 +15,22 @@ class PaginationInfo(BaseConfig):
     previous_page: Optional[int] = None
 
 
+class ExistsData(ApiConfig):
+    exists: bool
+
+
 ReturnType = TypeVar("ReturnType")
 
 
-class BaseResponse(BaseConfig, Generic[ReturnType]):
+class SuccessResponse(ApiConfig, Generic[ReturnType]):
     success: bool = True
     message: str = "Request processed successfully"
     data: Optional[ReturnType] = None
     pagination: Optional[PaginationInfo] = None
-    exists: Optional[bool] = None
+
+
+class ErrorResponse(ApiConfig):
+    success: bool = False
+    message: str = "Request failed"
+    error_code: Optional[str] = None
+    error_details: Optional[dict] = None

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from src.core.application.dtos.base_request import BaseRequest
+from src.core.application.dtos.common.base_request import BaseRequest
 from src.core.domain.entities.user.users_entity import (
     CoreCreateUsersEntity,
     CoreUpdateUsersEntity,
