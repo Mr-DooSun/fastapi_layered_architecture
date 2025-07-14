@@ -24,7 +24,7 @@ router = APIRouter()
     summary="유저 생성",
     tags=["유저"],
     response_model=SuccessResponse[CoreUsersDto],
-    response_model_exclude={"pagination", "exists"},
+    response_model_exclude={"pagination"},
 )
 @inject
 async def create_user(
@@ -45,7 +45,7 @@ async def create_user(
     summary="유저 생성 (복수)",
     tags=["유저"],
     response_model=SuccessResponse[List[CoreUsersDto]],
-    response_model_exclude={"pagination", "exists"},
+    response_model_exclude={"pagination"},
 )
 @inject
 async def create_users(
@@ -66,7 +66,6 @@ async def create_users(
     summary="유저 정보 모두 조회",
     tags=["유저"],
     response_model=SuccessResponse[List[CoreUsersDto]],
-    response_model_exclude={"exists"},
 )
 @inject
 async def get_users(
@@ -89,7 +88,7 @@ async def get_users(
     tags=["유저"],
     response_model=SuccessResponse[CoreUsersDto],
     response_model_exclude_none=True,
-    response_model_exclude={"pagination", "exists"},
+    response_model_exclude={"pagination"},
 )
 @inject
 async def get_user_by_user_id(
@@ -110,7 +109,7 @@ async def get_user_by_user_id(
     summary="ID 리스트로 유저 여러 명 조회",
     tags=["유저"],
     response_model=SuccessResponse[List[CoreUsersDto]],
-    response_model_exclude={"pagination", "exists"},
+    response_model_exclude={"pagination"},
 )
 @inject
 async def get_users_by_ids(
@@ -131,7 +130,7 @@ async def get_users_by_ids(
     summary="유저 수정",
     tags=["유저"],
     response_model=SuccessResponse[CoreUsersDto],
-    response_model_exclude={"pagination", "exists"},
+    response_model_exclude={"pagination"},
 )
 @inject
 async def update_user_by_user_id(
@@ -155,7 +154,7 @@ async def update_user_by_user_id(
     summary="유저 삭제",
     tags=["유저"],
     response_model=SuccessResponse,
-    response_model_exclude={"data", "pagination", "exists"},
+    response_model_exclude={"data", "pagination"},
 )
 @inject
 async def delete_user_by_user_id(

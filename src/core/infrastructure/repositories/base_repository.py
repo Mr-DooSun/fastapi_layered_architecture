@@ -40,33 +40,26 @@ class BaseRepository(ABC, Generic[CreateEntity, ReturnEntity, UpdateEntity]):
     async def create_data(self, create_data: CreateEntity) -> ReturnEntity:
         async with self.database.session() as session:
             data = self.model(**create_data.model_dump(exclude_none=True))
-
             session.add(data)
             await session.commit()
             await session.refresh(data)
-
-        return self.return_entity.model_validate(vars(data))
+            return self.return_entity.model_validate(data, from_attributes=True)
 
     async def create_datas(
         self, create_datas: List[CreateEntity]
     ) -> List[ReturnEntity]:
         async with self.database.session() as session:
-            objs = [
+            datas = [
                 self.model(**create_data.model_dump(exclude_none=True))
                 for create_data in create_datas
             ]
-
-            session.add_all(objs)
+            session.add_all(datas)
             await session.flush()
 
-            for obj in objs:
-                await session.refresh(obj)
-
             await session.commit()
-
             return [
-                self.return_entity.model_validate(obj, from_attributes=True)
-                for obj in objs
+                self.return_entity.model_validate(data, from_attributes=True)
+                for data in datas
             ]
 
     async def get_datas(self, page: int, page_size: int) -> List[ReturnEntity]:
@@ -76,7 +69,10 @@ class BaseRepository(ABC, Generic[CreateEntity, ReturnEntity, UpdateEntity]):
             )
             datas = result.scalars().all()
 
-        return [self.return_entity.model_validate(vars(data)) for data in datas]
+            return [
+                self.return_entity.model_validate(data, from_attributes=True)
+                for data in datas
+            ]
 
     async def get_data_by_data_id(self, data_id: int) -> ReturnEntity:
         async with self.database.session() as session:
@@ -84,25 +80,24 @@ class BaseRepository(ABC, Generic[CreateEntity, ReturnEntity, UpdateEntity]):
                 select(self.model).filter(self.model.id == data_id)
             )
             data = result.scalar_one_or_none()
-
-        if not data:
-            raise BaseCustomException(
-                status_code=404, message=f"Data with ID [ {data_id} ] not found"
-            )
-
-        return self.return_entity.model_validate(vars(data))
+            if not data:
+                raise BaseCustomException(
+                    status_code=404, message=f"Data with ID [ {data_id} ] not found"
+                )
+            return self.return_entity.model_validate(data, from_attributes=True)
 
     async def get_datas_by_data_ids(self, data_ids: List[int]) -> List[ReturnEntity]:
         if not data_ids:
             return []
-
         async with self.database.session() as session:
             result = await session.execute(
                 select(self.model).where(self.model.id.in_(data_ids))
             )
             datas = result.scalars().all()
-
-        return [self.return_entity.model_validate(vars(data)) for data in datas]
+            return [
+                self.return_entity.model_validate(data, from_attributes=True)
+                for data in datas
+            ]
 
     async def count_datas(self) -> int:
         async with self.database.session() as session:
@@ -117,18 +112,15 @@ class BaseRepository(ABC, Generic[CreateEntity, ReturnEntity, UpdateEntity]):
                 select(self.model).filter(self.model.id == data_id)
             )
             data = result.scalar_one_or_none()
-
             if not data:
                 raise BaseCustomException(
                     status_code=404, message=f"Data with ID [ {data_id} ] not found"
                 )
-
             for key, value in update_data.model_dump(exclude_none=True).items():
                 setattr(data, key, value)
-
             await session.commit()
             await session.refresh(data)
-            return self.return_entity.model_validate(vars(data))
+            return self.return_entity.model_validate(data, from_attributes=True)
 
     async def delete_data_by_data_id(self, data_id: int) -> bool:
         async with self.database.session() as session:
@@ -136,7 +128,6 @@ class BaseRepository(ABC, Generic[CreateEntity, ReturnEntity, UpdateEntity]):
                 select(self.model).filter(self.model.id == data_id)
             )
             data = result.scalar_one_or_none()
-
             if data:
                 await session.delete(data)
                 await session.commit()
