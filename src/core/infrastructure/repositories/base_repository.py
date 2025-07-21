@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import Generic, List, Type, TypeVar
 
 from sqlalchemy import func, select
@@ -13,29 +13,21 @@ ReturnEntity = TypeVar("ReturnEntity", bound=Entity)
 UpdateEntity = TypeVar("UpdateEntity", bound=Entity)
 
 
-class BaseRepository(ABC, Generic[CreateEntity, ReturnEntity, UpdateEntity]):
-    def __init__(self, database: Database) -> None:
+class BaseRepository(Generic[CreateEntity, ReturnEntity, UpdateEntity], ABC):
+    def __init__(
+        self,
+        database: Database,
+        *,
+        model: Type[Base],
+        create_entity: Type[CreateEntity],
+        return_entity: Type[ReturnEntity],
+        update_entity: Type[UpdateEntity],
+    ) -> None:
         self.database = database
-
-    @property
-    @abstractmethod
-    def model(self) -> Type[Base]:
-        pass
-
-    @property
-    @abstractmethod
-    def create_entity(self) -> Type[CreateEntity]:
-        pass
-
-    @property
-    @abstractmethod
-    def return_entity(self) -> Type[ReturnEntity]:
-        pass
-
-    @property
-    @abstractmethod
-    def update_entity(self) -> Type[UpdateEntity]:
-        pass
+        self.model = model
+        self.create_entity = create_entity
+        self.return_entity = return_entity
+        self.update_entity = update_entity
 
     async def create_data(self, create_data: CreateEntity) -> ReturnEntity:
         async with self.database.session() as session:

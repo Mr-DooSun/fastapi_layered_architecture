@@ -1,40 +1,31 @@
 # -*- coding: utf-8 -*-
-from abc import ABC, abstractmethod
-from typing import List, Tuple, Type, TypeVar
-
-from pydantic import BaseModel
+from abc import ABC
+from typing import Generic, List, Tuple, Type, TypeVar
 
 from src.core.application.dtos.common.base_request import IdListDto
 from src.core.application.dtos.common.base_response import PaginationInfo
 from src.core.common.pagination import make_pagination
+from src.core.domain.entities.entity import Entity
 from src.core.domain.services.base_service import BaseService
 
-CreateEntity = TypeVar("CreateEntity", bound=BaseModel)
-ReturnEntity = TypeVar("ReturnEntity", bound=BaseModel)
-UpdateEntity = TypeVar("UpdateEntity", bound=BaseModel)
+CreateEntity = TypeVar("CreateEntity", bound=Entity)
+ReturnEntity = TypeVar("ReturnEntity", bound=Entity)
+UpdateEntity = TypeVar("UpdateEntity", bound=Entity)
 
 
-class BaseUseCase(ABC):
+class BaseUseCase(Generic[CreateEntity, ReturnEntity, UpdateEntity], ABC):
     def __init__(
         self,
         base_service: BaseService,
+        *,
+        create_entity: Type[CreateEntity],
+        return_entity: Type[ReturnEntity],
+        update_entity: Type[UpdateEntity],
     ) -> None:
         self.base_service = base_service
-
-    @property
-    @abstractmethod
-    def create_entity(self) -> Type[CreateEntity]:
-        pass
-
-    @property
-    @abstractmethod
-    def return_entity(self) -> Type[ReturnEntity]:
-        pass
-
-    @property
-    @abstractmethod
-    def update_entity(self) -> Type[UpdateEntity]:
-        pass
+        self.create_entity = create_entity
+        self.return_entity = return_entity
+        self.update_entity = update_entity
 
     async def create_data(self, create_data: CreateEntity) -> ReturnEntity:
         return await self.base_service.create_data(create_data=create_data)
