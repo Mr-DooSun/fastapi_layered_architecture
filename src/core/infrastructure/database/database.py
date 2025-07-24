@@ -44,7 +44,7 @@ class Database:
         database_name: str,
     ) -> None:
         dsn = create_sync_dsn(
-            database_user=database_user,
+            database_user=quote_plus(database_user),
             database_password=quote_plus(database_password),
             database_host=database_host,
             database_port=database_port,
@@ -52,7 +52,7 @@ class Database:
         )
 
         async_dsn = create_async_dsn(
-            database_user=database_user,
+            database_user=quote_plus(database_user),
             database_password=quote_plus(database_password),
             database_host=database_host,
             database_port=database_port,

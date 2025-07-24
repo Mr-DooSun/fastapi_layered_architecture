@@ -11,6 +11,10 @@ class CoreContainer(containers.DeclarativeContainer):
     config = providers.Configuration(strict=True)
     config.from_yaml("./config.yml")
 
+    #########################################################
+    # Database
+    #########################################################
+
     database = providers.Singleton(
         Database,
         database_user=config.database.user,
@@ -20,6 +24,10 @@ class CoreContainer(containers.DeclarativeContainer):
         database_name=config.database.name,
     )
 
+    #########################################################
+    # Storage
+    #########################################################
+
     minio_client = providers.Singleton(
         Minio,
         endpoint=config.minio.endpoint,
@@ -27,6 +35,10 @@ class CoreContainer(containers.DeclarativeContainer):
         secret_key=config.minio.secret_key,
         secure=False,  # HTTPS가 아닌 경우 False 설정
     )
+
+    #########################################################
+    # Messaging
+    #########################################################
 
     rabbitmq_manager = providers.Singleton(
         RabbitMQManager,
