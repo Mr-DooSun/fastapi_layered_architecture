@@ -17,6 +17,7 @@ class CoreContainer(containers.DeclarativeContainer):
 
     database = providers.Singleton(
         Database,
+        env=config.env,
         database_user=config.database.user,
         database_password=config.database.password,
         database_host=config.database.host,

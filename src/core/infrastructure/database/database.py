@@ -30,6 +30,20 @@ def create_sync_dsn(
     return f"mysql+pymysql://{database_user}:{database_password}@{database_host}:{database_port}/{database_name}?charset=utf8mb4"
 
 
+def get_database_config(env: str):
+    if env == "prod":
+        return {
+            "echo": False,
+            "pool_size": 10,
+            "max_overflow": 20,
+            "pool_pre_ping": True,
+            "pool_recycle": 3600,
+            "connect_args": {"connect_timeout": 10},
+        }
+    else:
+        return {"echo": True, "pool_size": 5, "max_overflow": 10, "pool_pre_ping": True}
+
+
 class Base(DeclarativeBase):
     pass
 
@@ -37,6 +51,7 @@ class Base(DeclarativeBase):
 class Database:
     def __init__(
         self,
+        env: str,
         database_user: str,
         database_password: str,
         database_host: str,
@@ -59,13 +74,10 @@ class Database:
             database_name=database_name,
         )
 
-        self.engine = create_engine(url=dsn)
+        self.engine = create_engine(url=dsn, echo=False)
         self.async_engine = create_async_engine(
             url=async_dsn,
-            echo=True,  # 개발환경에서만 True
-            pool_size=20,
-            max_overflow=30,
-            pool_pre_ping=True,
+            **get_database_config(env=env),
         )
 
         self.async_session_factory = sessionmaker(
